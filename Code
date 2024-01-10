@@ -1,0 +1,389 @@
+#------------DATA PROCESSING & VISUALIZATION-----------
+## Get the data
+
+# Set working directory
+setwd(dirname(file.choose()))
+getwd()
+
+# read file
+Aultism.dat <- read.csv("Altism in Adult.csv", stringsAsFactors = FALSE)
+head(Aultism.dat)
+
+# examine the structure of the Diabetes data frame
+str(Aultism.dat)
+summary(Aultism.dat)
+
+
+# check for missing data
+apply(Aultism.dat, MARGIN = 2, FUN = function(x) sum(is.na(x)))
+library(Amelia)
+missmap(Aultism.dat, col = c("black", "aquamarine4"), legend = FALSE)
+# remove any missing data
+Aultism.dat <- na.omit(Aultism.dat)   
+
+# table of Class
+table(Aultism.dat$Class)
+barplot(table(Aultism.dat$Class), col = c("aquamarine4", "red"), main="Aultism Diagnoses Distribution")
+# Proportions with more informative labels
+round(prop.table(table(Aultism.dat$Class)) * 100, digits = 1)
+pie(round(prop.table(table(Aultism.dat$Class)) * 100, digits = 1))
+
+# table of Class
+table(Aultism.dat$Gender, Aultism.dat$Class)
+barplot(table(Aultism.dat$Gender, Aultism.dat$Class))
+
+# table of Ethnicity
+table(Aultism.dat$Ethnicity)
+barplot(table(Aultism.dat$Ethnicity))
+
+# table of Age with the corresponding Bar chart
+table(Aultism.dat$Age)
+diabBar <-table(Aultism.dat$Age)
+barplot(diabBar, col=rgb(0.3,0.6,0.9, 0.9), main = "Age Distribution")
+
+
+#-----Visualizing using Bar Plots of all variables---------------
+table(Aultism.dat$Class,Aultism.dat$Age)
+barplot(table(Aultism.dat$Class,Aultism.dat$Age),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by Age", legend.text = TRUE)
+barplot(table(Aultism.dat$Class,Aultism.dat$Gender),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by Gender")
+barplot(table(Aultism.dat$Class,Aultism.dat$A1_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A1_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A2_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A2_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A3_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A3_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A4_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A4_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A5_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A5_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A6_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A6_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A7_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A7_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A8_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A8_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A9_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A9_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$A10_Score),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by A10_Score")
+barplot(table(Aultism.dat$Class,Aultism.dat$Born_with_Jaundice),col = c("darkcyan", "purple1"),main="Class Distribution of all Patients by Born_with_Jaundice")
+barplot(table(Aultism.dat$Class,Aultism.dat$Autism_in_Family),col = c("darkcyan", "purple1"),main="Class Distribution of all Autism_in_Family")
+barplot(table(Aultism.dat$Class,Aultism.dat$Used_app_before),col = c("darkcyan", "purple1"),main="Class Distribution of all Used_app_before")
+barplot(table(Aultism.dat$Class,Aultism.dat$Relation),col = c("darkcyan", "purple1"),main="Class Distribution of all Relation")
+barplot(table(Aultism.dat$Class,Aultism.dat$Result ),col = c("darkcyan", "purple1"),main="Class Distribution of all Result ")
+barplot(table(Aultism.dat$Class,Aultism.dat$Ethnicity ),col = c("darkcyan", "purple1"),main="Class Distribution of all Ethnicity ")
+
+#-----Visualizing using Histogram with added parameters---------------
+
+#Class distribution using Barchart
+library(ggplot2)
+ggplot(data=Aultism.dat)+
+  geom_bar(aes(x=class, fill="salmon"))
+
+
+# Simple Pie Chart from Proportions with more informative labels - Gender
+round(prop.table(table(Aultism.dat$Gender)) * 100, digits = 1) #Percentage Distribution
+slices <- c(52.7, 47.3)
+lbls <- c("Male", "Female")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="") # ad % to labels 
+pie(slices, labels = lbls,col = c("blue2", "deeppink"), main="Pie Chart of Gender")
+
+
+# Simple Pie Chart from Proportions with more informative labels - Class
+round(prop.table(table(Aultism.dat$Class)) * 100, digits = 1) #Percentage Distribution
+slices <- c(70.4, 29.6)
+lbls <- c("Negative Diagnosis", "Positive Diagnosis")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="") # ad % to labels 
+pie(slices, labels = lbls,col = c("springgreen4","red"), main="Pie Chart of Positive/Negative Diagnoses")
+
+
+#------------Boxplots for visualization----------
+boxplot(Age~Gender, data=Aultism.dat, col="darkorchid4", main="Age/Gender")
+boxplot(Age~Class, data=Aultism.dat, col="coral4", main="Age/Class")
+boxplot(Gender~Class, data=Aultism.dat, col="coral4", main="Gender/Class")
+
+
+#Data Transformation for Correlation and Factor Analysis
+Aultism.mat <- data.matrix(Aultism.dat)
+Aultism.mat <- as.data.frame(Aultism.mat)
+str(Aultism.mat)
+
+boxplot(Aultism.mat, col="coral4")
+ResultDiagnoses <- boxplot(Result~Class, data=Aultism.mat, col="coral4", 
+                           main="Boxplot of Diagnoses by Result")
+
+#Check correlations between all variables using Matrix
+library(corrplot)
+Aultism.cor = cor(Aultism.mat)
+#Order by alphabet and arranged in order of correlation
+corrplot(Aultism.cor, method = 'number',  order= "alphabet", diag=FALSE) 
+Aultism.cor
+
+
+#--------check correlations between Independent attributes (2)--------
+library(corrplot)
+correlationMatrix <- cor(Aultism.mat [,1:20])
+corrplot(correlationMatrix, method="color", 
+         # Show the coefficient value
+         addCoef.col="Black", 
+         # Cluster based on coefficients
+         order="FPC", 
+         # Show only the matrix bottom and avoid the diagonal of ones.
+         type="lower", diag=FALSE, 
+         # Cross the values that are not significant
+         sig.level=0.05, main = "Correlation Matrix of All Variables")
+# "FPC" = "FIRST PRINCIPAL ORDER" is to enable it order OF their correlation.
+
+
+
+#------- test correlation of dependent variable with all independent variables
+attach(Aultism.mat)
+
+#-Calculate partial correlation------
+library(ppcor)
+pcor.test(Class, Ethnicity, Country_of_residence) #Geographical factors
+pcor.test(Class, Age, Gender) #Base level factors
+pcor.test(Class, A10_Score, Result) #Lab results factors
+pcor.test(Class, Born_with_Jaundice, Autism_in_Family) #Hereditary factors
+
+# test correlation of dependent variable with all independent variables
+cor.test(Class, Age)
+cor.test(Class, Result)
+cor.test(Class, Ethnicity)
+cor.test(Class, Country_of_residence)
+cor.test(Class, Gender)
+cor.test(Class, Born_with_Jaundice)
+cor.test(Class, Autism_in_Family)
+cor.test(Class, Used_app_before)
+cor.test(Class, A10_Score)
+cor.test(Class, Relation)
+
+detach(Aultism.mat)
+
+
+
+#-----------Factor Analysis--------
+library(psych)
+# The Kaiser-Meyer-Olkin (KMO) test to measure suitable attributes for my analysis
+KMO(Aultism.mat)
+# The Bartlett's test of sphericity from Correlation Analysis
+cortest.bartlett(Aultism.mat)
+# Alpha function to find data reliability. To be used in Training/Testing
+alpha(Aultism.mat)
+
+#------Eigen Value Analysis-------------
+# Determine Number of Factors to Extract
+library(nFactors)
+# get eigenvalues: eigen() uses a correlation matrix
+ev <- eigen(cor(Aultism.mat))
+ev$values
+sum(ev$values)
+zz <- as.data.frame(ev$values)
+yy <- as.data.frame(ev$vectors)
+# plot a scree plot of eigenvalues
+plot(ev$values, type="b", col="blue", xlab="variables", lwd=2, main = "Eigen Value Plot")
+
+# calculate cumulative proportion of eigenvalue and plot
+ev.sum<-0
+for(i in 1:length(ev$value)){
+  ev.sum<-ev.sum+ev$value[i]
+}
+ev.list1<-1:length(ev$value)
+for(i in 1:length(ev$value)){
+  ev.list1[i]=ev$value[i]/ev.sum
+}
+ev.list2<-1:length(ev$value)
+ev.list2[1]<-ev.list1[1]
+for(i in 2:length(ev$value)){
+  ev.list2[i]=ev.list2[i-1]+ev.list1[i]
+}
+plot (ev.list2, type="b", col="red", xlab="number of components", ylab ="cumulative proportion", lwd =2,
+      main = "Eigen Value Cumulative Proportion Plot")
+
+
+#-----Principal Components Analysis
+# retaining 'nFactors' components
+library(GPArotation)
+library(psych)
+# principal() uses a data frame or matrix of correlations
+pca <- principal(Aultism.mat[-120], nfactors=5, rotate="varimax", method = "maximum likelihood")
+pca
+# create four variables to represent the rorated components
+pca$scores
+sum(pca$fit)
+
+
+#Create a new data frame [Aultism.df] from result of factor analysis
+#Remove the variable Country_of_residence based on PCA result
+Aultism.df <-data.frame(Aultism.mat)
+describe(Aultism.df)
+
+#Examine Class distibution
+table(Aultism.df$Class)
+prop.table(table(Aultism.df$Class)) #70-30
+
+#Create a Performance Analytics Matrix
+library(PerformanceAnalytics)
+chart.Correlation(Aultism.df, histogram=TRUE, pch=19)
+pairs.panels(Aultism.df, main="Performance Matrix")
+
+
+#-Normalization Using Min/Max------
+library(DMwR2)
+Aultism.nm <- as.data.frame(Aultism.df[c(1:19)])
+# min-max scaling
+Aultism.nm <- as.data.frame(apply(Aultism.nm, MARGIN = 2, FUN = function(x) (x - min(x))/diff(range(x))))
+boxplot(Aultism.nm, main = "Min-Max", col="brown")
+
+
+#-Normalization Using Soft Max------
+Aultism.nm <- as.data.frame(Aultism.df[c(1:19)])
+# soft max [edit lambda]
+Aultism.nm <- apply(Aultism.nm, MARGIN = 2, FUN = function(x) (SoftMax(x,lambda = 7, mean(x), sd(x))))
+#--Investigate the result of the normalization
+boxplot (Aultism.nm, main = "Soft Max, lambda = 7", col="Bisque")
+
+
+#Fit in the dependent variable in the transformed data frame
+Aultism.nm$Class <- as.factor(Aultism.df$Class)
+describe(Aultism.nm)
+str(Aultism.nm)
+
+#TRAINING AND TESTING
+# create training (70%) and test data (30%) (data already in random order)
+set.seed(3690)
+library(caret)
+Train <- Aultism.nm[1:426, ]
+Test <- Aultism.nm[427:608, ]
+
+prop.table(table(Train$Class)) #70
+table(Train$Class)
+prop.table(table(Test$Class)) #30
+table(Test$Class)
+
+#-----Class Balance------
+library(ROSE)
+#Used Over Sampling
+Train.dat <-  ovun.sample(Class~., data =Train, method =  "over", N = 622, seed = 3690) $data
+prop.table(table(Train.dat$Class)) 
+table(Train.dat$Class)
+
+#Shuffle The Training Data
+Train.dat <- Train.dat[sample(nrow(Train.dat)),]
+#----------------LOGISTIC REGRESSION ALGORITHM------------------
+#--------------------Set working directory----------------------
+
+
+# Change categorical variable to factors
+Train.dat$Class = factor (Train.dat$Class)
+set.seed(12480)
+library(caTools)
+
+LR.Model <- glm(formula = Class ~ ., family = binomial, data = Train.dat)
+LR.Model
+summary(LR.Model)
+
+#Predictions
+LR.Pr = predict(LR.Model, type = 'response', newdata = Test[-20])
+LR.Pred = ifelse(LR.Pr > 0.5, 1, 0)
+
+# Assess accuracy
+library(gmodels)
+CrossTable(x = Test[,20],  y = LR.Pred, prop.chisq = FALSE)
+library(caret)
+confusionMatrix(as.factor(LR.Pred), Test[,20], positive = "1")
+
+
+#Plotting ROC Curve for the Models with AUC
+library(pROC)
+LR.Perf <- roc(Test$Class, LR.Pred)
+plot(LR.Perf,plot=TRUE, print.auc=TRUE,
+     col="red", lwd=4, legacy.axes=TRUE,main="Logistic Regression ROC Curve")
+auc(Test$Class, LR.Pred)
+
+
+
+
+library(class)
+#*********************KNN******************************
+sqrt(622) #Find the Square root of training dataset
+#using K value as 25
+set.seed(12480)
+knn25 = knn(train = Train.dat[, -20], test = Test[-20], cl = Train.dat[, 20], k = 25)
+#using K value as 23
+knn3 = knn(train = Train.dat[, -20], test = Test[-20], cl = Train.dat[, 20], k = 3)
+
+library(gmodels)
+library(caret)
+# evaluating the models Performances with CrossTabulation & Confusion Matrix
+CrossTable(x = Test[,20], y = knn25, prop.chisq=FALSE)
+confusionMatrix(as.factor(knn25), Test[,20], mode = "everything", positive = "1")
+
+CrossTable(x = Test[,20], y = knn3, prop.chisq=FALSE)
+confusionMatrix(as.factor(knn3), Test[,20], mode = "everything", positive = "1")
+
+#Plotting ROC Curve for the Models with AUC
+library(pROC)
+library(ROCR)
+KNN_Perf <- roc(Test[,20]~ as.numeric(knn25))
+plot(KNN_Perf,plot=TRUE, print.auc=TRUE,
+     col="brown", lwd=4, legacy.axes=TRUE,main="ROC Curve of kNN, k=25")
+auc(Test$Class, as.numeric(knn25))
+
+KNN_Perf3 <- roc(Test[,20]~ as.numeric(knn3))
+plot(KNN_Perf3,plot=TRUE, print.auc=TRUE,
+     col="brown", lwd=4, legacy.axes=TRUE,main="ROC Curve of kNN, k=3")
+auc(Test$Class, as.numeric(knn3))
+
+
+
+#*********************Decision Tree************************
+library(C50)
+library(rpart)
+library(rpart.plot)
+set.seed(12480)
+#Fitting the Decision Tree for the Training set
+fit <- rpart(Class~., data = Train.dat, method = 'class')
+rpart.plot(fit,  shadow.col="gray", nn=TRUE, 
+           main="Decision Tree Schematic of Trained Model")
+
+# build the simplest decision tree
+ALT.model <- C5.0(Train.dat[-20], Train.dat[,20])
+ALT.model # display simple facts about the tree
+summary(ALT.model) # display detailed information about the tree
+plot(ALT.model)
+
+# apply the model to make predictions
+DT_pred <- predict(ALT.model, Test)
+
+# evaluating the models Performances with CrossTabulation & Confusion Matrix
+library(gmodels)
+library(caret)
+CrossTable(Test[,20], DT_pred, prop.chisq = FALSE, prop.c = FALSE)
+confusionMatrix(DT_pred, Test[,20], positive = "1")
+
+# improving model performance BY pruning the tree to simplify and/or avoid over-fitting
+set.seed(1248)
+prune.Model <- C5.0(Train.dat[-20], Train.dat$Class,
+                    control = C5.0Control(minCases = 9))
+prune.Model
+summary(prune.Model)
+plot(prune.Model)
+
+# apply the model to make predictions
+prune.Pred <- predict(prune.Model, Test)
+
+# evaluating the models Performances with CrossTabulation & Confusion Matrix
+CrossTable(Test[,20], prune.Pred,prop.chisq = FALSE, prop.c = FALSE)
+confusionMatrix(prune.Pred, Test[,20], positive = "1")
+
+#Plotting ROC Curve for the Models with AUC
+library(pROC)
+library(ROCR)
+DT_Perf <- roc(Test[,20]~ as.numeric(prune.Pred))
+plot(DT_Perf,plot=TRUE, print.auc=TRUE, col="red", lwd=4, legacy.axes=TRUE,
+     main="ROC Curve of Decision Tree (Pruned Tree)")
+auc(Test$Class, as.numeric(prune.Pred))
+
+
+
+# remove all variables from the environment
+rm(list=ls())
+
+#Close R-Studio
+q()
+Y
